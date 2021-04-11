@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: markerworld-deployment
+  labels:
+    app: markerworld
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: markerworld
+  template:
+    metadata:
+      labels:
+        app: markerworld
+    spec:
+      containers:
+      - name: markerworld
+        image: ${{ .Values.image.repository }}
+        imagePullPolicy: ${{ .Values.image.pullPolicy }}
+        ports:
+          - containerPort: ${{ .Values.service.port }}

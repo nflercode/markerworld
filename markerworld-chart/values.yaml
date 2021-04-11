@@ -1,0 +1,11 @@
+image:
+  repository: nfler/markerworld
+  pullPolicy: Always
+  tag: latest
+
+service:
+  port: 3000
+
+ingress:
+  host: api.nfler.se
+
