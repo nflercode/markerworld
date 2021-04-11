@@ -4,7 +4,7 @@ image:
   tag: latest
 
 service:
-  port: 3000
+  port: 80
 
 ingress:
   host: api.nfler.se

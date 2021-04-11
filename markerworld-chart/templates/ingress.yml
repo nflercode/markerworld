@@ -4,7 +4,7 @@ metadata:
   name: markerworld-ingress
 spec:
   rules:
-  - host: ${{ .Values.ingress.host }}
+  - host: {{ .Values.ingress.host }}
     http:
       paths:
       - path: /
@@ -13,4 +13,4 @@ spec:
           service:
             name: markerworld-svc
             port:
-              number: ${{ .Values.service.port }}
+              number: {{ .Values.service.port }}

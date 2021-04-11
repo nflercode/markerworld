@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: markerworld
-        image: ${{ .Values.image.repository }}
-        imagePullPolicy: ${{ .Values.image.pullPolicy }}
+        image: {{ .Values.image.repository }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-          - containerPort: ${{ .Values.service.port }}
+          - containerPort: {{ .Values.service.port }}
