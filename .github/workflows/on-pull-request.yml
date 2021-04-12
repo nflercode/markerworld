@@ -10,7 +10,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        name: checkout code
+        name: Checkout code
+        with:
+         fetch-depth: 0
         
       - name: Docker meta
         id: meta
