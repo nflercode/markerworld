@@ -1,3 +1,8 @@
+env: {}
+
+# FILE GENERATED WITH: npx ghat nflercode/ghtemplates/templates
+# SOURCE: https://github.com/nflercode/ghtemplates
+
 name: CI/CD
 
 on:

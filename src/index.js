@@ -8,17 +8,17 @@ app.get('/', (req, res) => {
 
 app.get('/v3', (req, res) => {
   res.send({
-    rare: 'feature'
-  })
+    rare: 'feature v3'
+  });
 });
 
 app.get('/group', (req, res) => {
   res.send({
     id: 1,
     name: "my try group"
-  })
+  });
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening at http://localhost:${port}`);
 });
