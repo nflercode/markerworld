@@ -49,10 +49,6 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-      - name: Echo image tag
-        run: >-
-          echo Tags ${{ steps.meta.outputs.tags }} Version ${{
-          steps.meta.outputs.version }}
       - name: Set up kubectl
         uses: matootie/dokube@v1.3.4
         with:
