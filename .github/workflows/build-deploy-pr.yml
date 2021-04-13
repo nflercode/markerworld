@@ -8,7 +8,6 @@ env:
 # SOURCE: https://github.com/nflercode/ghtemplates
 
 name: PR-Env
-
 on:
   pull_request:
     branches:
@@ -35,7 +34,7 @@ jobs:
         id: meta
         uses: crazy-max/ghaction-docker-meta@v2
         with:
-          images: ${{ DOCKER_IMAGE_REPO }}
+          images: ${{ env.DOCKER_IMAGE_REPO }}
           tags: >
             type=semver,pattern={{version}},value=${{
             steps.bumpver.outputs.new_tag }}
@@ -63,7 +62,7 @@ jobs:
       - name: Deploy with helm
         run: >-
           helm upgrade --set image.tag=${{ steps.meta.outputs.version }} --set
-          ingress.host=${{ INGRESS_HOST_PREFIX }}pr-${{ github.event.number
-          }}.nfler.se ${{ APP_NAME }}-pr-${{ github.event.number }} ${{
-          HELM_CHART }} -i --create-namespace -n ${{ APP_NAME }}-pr-${{
+          ingress.host=${{ env.INGRESS_HOST_PREFIX }}pr-${{ github.event.number
+          }}.nfler.se ${{ env.APP_NAME }}-pr-${{ github.event.number }} ${{
+          env.HELM_CHART }} -i --create-namespace -n ${{ env.APP_NAME }}-pr-${{
           github.event.number }}
