@@ -22,7 +22,7 @@ jobs:
           WITH_V: true
           
       - name: bumpver outpug
-        run: echo ${{ bumpver.outputs.new_tag }} ${{ bumpver.outputs.tag }} ${{ bumpver.outputs.part }}
+        run: echo ${{ steps.bumpver.outputs.new_tag }} ${{ steps.bumpver.outputs.tag }} ${{ steps.bumpver.outputs.part }}
         
       - name: Docker meta
         id: meta
@@ -30,7 +30,7 @@ jobs:
         with:
           images: nfler/markerworld
           tags: |
-           type=semver,pattern={{version}},value=${{ bumpver.outputs.new_tag }}
+           type=semver,pattern={{version}},value=${{ steps.bumpver.outputs.new_tag }}
         
       - name: Login to DockerHub
         uses: docker/login-action@v1
