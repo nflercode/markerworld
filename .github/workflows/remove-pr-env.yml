@@ -19,7 +19,11 @@ jobs:
           personalAccessToken: ${{ secrets.DIGITALOCEAN_TOKEN_K8S }}
           clusterName: k8s-nfler-dev
       - uses: azure/setup-helm@v1
-      - name: Deploy with helm
+      - name: uninstall with helm
         run: >-
           helm uninstall ${{ env.APP_NAME }}-pr-${{ github.event.number }} -n
           ${{ env.APP_NAME }}-pr-${{ github.event.number }}
+      - name: delete namespace
+        run: >-
+          kubectl delete namespace ${{ env.APP_NAME }}-pr-${{
+          github.event.number }}
