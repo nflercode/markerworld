@@ -1,3 +1,5 @@
+pr: null
+
 image:
   repository: nfler/markerworld
   pullPolicy: Always
@@ -5,7 +7,4 @@ image:
 
 service:
   port: 80
-
-ingress:
-  host: api.nfler.se
 

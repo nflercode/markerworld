@@ -1,8 +1,5 @@
 env:
-  DOCKER_IMAGE_REPO: nfler/markerworld
-  INGRESS_HOST_PREFIX: api.
   APP_NAME: markerworld
-  HELM_CHART: ./markerworld-chart
 
 # FILE GENERATED WITH: npx ghat nflercode/ghtemplates/templates
 # SOURCE: https://github.com/nflercode/ghtemplates
@@ -34,7 +31,7 @@ jobs:
         id: meta
         uses: crazy-max/ghaction-docker-meta@v2
         with:
-          images: ${{ env.DOCKER_IMAGE_REPO }}
+          images: nfler/${{ env.APP_NAME }}
           tags: >
             type=semver,pattern={{version}},value=${{
             steps.bumpver.outputs.new_tag }}
@@ -58,7 +55,7 @@ jobs:
       - name: Deploy with helm
         run: >-
           helm upgrade --set image.tag=${{ steps.meta.outputs.version }} --set
-          ingress.host=${{ env.INGRESS_HOST_PREFIX }}pr-${{ github.event.number
-          }}.nfler.se ${{ env.APP_NAME }}-pr-${{ github.event.number }} ${{
-          env.HELM_CHART }} -i --create-namespace -n ${{ env.APP_NAME }}-pr-${{
-          github.event.number }}
+          pr=${{ github.event.number }} ${{ env.APP_NAME }}-pr-${{
+          github.event.number }} ./${{ env.APP_NAME }}-chart -i
+          --create-namespace -n ${{ env.APP_NAME }}-pr-${{ github.event.number
+          }}
