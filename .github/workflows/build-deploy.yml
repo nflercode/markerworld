@@ -55,5 +55,5 @@ jobs:
       - name: Deploy with helm
         run: >-
           helm upgrade --set image.tag=${{ steps.meta.outputs.version }} ${{
-          env.APP_NAME }}-prod ./${{ env.APP_NAME }}-chart -i --create-namespace
-          -n ${{ env.APP_NAME }}-prod
+          env.APP_NAME }}-prod ./chart -i --create-namespace -n ${{ env.APP_NAME
+          }}-prod

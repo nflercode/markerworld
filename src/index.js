@@ -1,22 +1,16 @@
-const express = require('express');
+import express from 'express'
+import { createGroup } from './services/groupService.js'
+
 const app = express();
+app.use(express.json());
+
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!!!');
-});
+app.post('/poker/groups', (req, res) => {
+  const { body } = req;
 
-app.get('/v3', (req, res) => {
-  res.send({
-    rare: 'feature v3'
-  });
-});
-
-app.get('/group', (req, res) => {
-  res.send({
-    id: 1,
-    name: "my try group"
-  });
+  const newGroup = createGroup(body.name);
+  res.send(newGroup);
 });
 
 app.listen(port, () => {
