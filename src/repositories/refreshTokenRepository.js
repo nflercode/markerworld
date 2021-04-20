@@ -19,7 +19,11 @@ function findRefreshToken(playerId) {
 
 function deleteRefreshToken(playerId) {
     const indexToRemove = refreshTokens.findIndex(t => t.playerId == playerId);
+    if (indexToRemove == -1)
+        return false;
+
     refreshTokens.splice(indexToRemove, 1);
+    return true;
 }
 
 export { addRefreshToken, findRefreshToken, deleteRefreshToken }

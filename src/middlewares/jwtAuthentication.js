@@ -5,18 +5,14 @@ function jwtAuth(req, res, next) {
 
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-        let result;
-
-        try {
-            result = verifyAuthToken(token);
-        } catch(error) {
-            return res.send(403);
-        }
+        const result = verifyAuthToken(token);
+        if (!result)
+            return res.status(403).send({ error: 'Token is not valid' });
 
         req.auth = result;
         next();
     } else {
-        res.sendStatus(401);
+        res.status(401).send({ error: 'Authrorization header is missign' });
     }
 }
 
