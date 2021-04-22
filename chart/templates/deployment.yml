@@ -18,5 +18,16 @@ spec:
       - name: markerworld
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: JWT_AUTH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: jwt-auth-secret
+                key: JWT_AUTH_SECRET
+          - name: JWT_REFRESH_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: jwt-refresh-secret
+                key: JWT_REFRESH_SECRET
         ports:
           - containerPort: {{ .Values.service.port }}
