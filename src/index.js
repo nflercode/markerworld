@@ -1,24 +1,20 @@
-const express = require('express');
+import express from 'express'
+import dotenv from 'dotenv'
+import { register as registerAuthApis } from './apis/auth.js'
+import { register as registerPlayerApis } from './apis/player.js'
+import { register as registerTableApis } from './apis/table.js'
+
+dotenv.config();
+
 const app = express();
+app.use(express.json());
+
+registerAuthApis(app);
+registerPlayerApis(app);
+registerTableApis(app);
+
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!!!');
-});
-
-app.get('/v3', (req, res) => {
-  res.send({
-    rare: 'feature v3'
-  });
-});
-
-app.get('/group', (req, res) => {
-  res.send({
-    id: 1,
-    name: "my try group"
-  });
-});
-
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`listening at http://localhost:${port}`);
 });
