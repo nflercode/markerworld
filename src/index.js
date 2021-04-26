@@ -10,6 +10,8 @@ import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers
 
 const allowedOrigins = [];
 
+console.log('Env is:', process.env.ENVIRONMENT);
+
 if (assumeLocal()) {
   console.log('starting as local');
   dotenv.config({path: process.cwd() + '/.env.local'});
@@ -24,6 +26,7 @@ if (isProductionEnvironment()) {
 if (isPrEnvironment()) {
   console.log('starting as prenv');
   allowedOrigins.push(/https:\/\/pr-\d+.nfler.se/);
+  allowedOrigins.push(/http:\/\/localhost:3001/);
 }
 
 const app = express();

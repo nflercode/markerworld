@@ -1,6 +1,6 @@
-const isProductionEnvironment = () => process.env.environment === 'production';
-const isPrEnvironment = () => process.env.environment === 'prenv';
-const isLocal = () => process.env.environment === 'local';
+const isProductionEnvironment = () => process.env.ENVIRONMENT === 'production';
+const isPrEnvironment = () => process.env.ENVIRONMENT === 'prenv';
+const isLocal = () => process.env.ENVIRONMENT === 'local';
 
 const assumeLocal = () => isLocal() || !(isProductionEnvironment() && isPrEnvironment());
 
