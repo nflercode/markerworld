@@ -4,20 +4,24 @@ import { jwtAuth } from '../socket-middlewares/jwtAuthentication.js';
 
 let io;
 
-function setUp(httpServer) {
+function setUp(httpServer, allowedOrigins) {
   io = new SocketIo(httpServer, {
     cors: {
-      origin: 'http://localhost:3001',
+      origin: allowedOrigins,
       methods: ["GET", "POST"]
     }
   });
 
   io.use(jwtAuth);
   
+  // TODO: check socket reconnect new token
   io.on('connection', (socket) => {
     const { auth } = socket;
     const roomId = getRoomName(auth.tableId);
     socket.join(roomId);
+
+    // TODO: Verify authToken over time
+
     console.log('Successfully connected player', auth.playerId, 'to room', roomId);
   });
 }

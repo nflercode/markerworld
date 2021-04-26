@@ -18,6 +18,9 @@ function register(app) {
 			return res.status(500).send({ error: 'Failed to remove player' });
 		}
 
+		// TODO: Invalidate authToken
+		// TODO: close socket
+
 		res.sendStatus(200);
 	});
 }
