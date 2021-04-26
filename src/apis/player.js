@@ -1,5 +1,5 @@
 import { removePlayer } from '../services/playerService.js'
-import { jwtAuth } from '../middlewares/jwtAuthentication.js'
+import { jwtAuth } from '../express-middlewares/jwtAuthentication.js'
 import { removeRefreshToken } from '../services/tokenService.js'
 
 function register(app) {  

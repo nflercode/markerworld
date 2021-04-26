@@ -54,7 +54,8 @@ jobs:
       - uses: azure/setup-helm@v1
       - name: Deploy with helm
         run: >-
-          helm upgrade --set image.tag=${{ steps.meta.outputs.version }} --set
-          pr=${{ github.event.number }} ${{ env.APP_NAME }}-pr-${{
-          github.event.number }} ./chart -i --create-namespace -n ${{
-          env.APP_NAME }}-pr-${{ github.event.number }}
+          helm upgrade --set environment=prenv --set image.tag=${{
+          steps.meta.outputs.version }} --set pr=${{ github.event.number }} ${{
+          env.APP_NAME }}-pr-${{ github.event.number }} ./chart -i
+          --create-namespace -n ${{ env.APP_NAME }}-pr-${{ github.event.number
+          }}

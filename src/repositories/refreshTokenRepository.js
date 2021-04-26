@@ -14,12 +14,12 @@ function addRefreshToken(refreshToken, playerId) {
 }
 
 function findRefreshToken(playerId) {
-    return refreshTokens.find(t => t.playerId == playerId);
+    return refreshTokens.find(t => t.playerId === playerId);
 }
 
 function deleteRefreshToken(playerId) {
-    const indexToRemove = refreshTokens.findIndex(t => t.playerId == playerId);
-    if (indexToRemove == -1)
+    const indexToRemove = refreshTokens.findIndex(t => t.playerId === playerId);
+    if (indexToRemove === -1)
         return false;
 
     refreshTokens.splice(indexToRemove, 1);
