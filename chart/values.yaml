@@ -1,4 +1,5 @@
 pr: null
+environment: local
 
 image:
   repository: nfler/markerworld

@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken';
 
+/*
+	TODO: Return expire on auth & refresh token
+*/
+
 function generateAuthToken(payload) {
 	try {
 		return jwt.sign(payload, process.env.JWT_AUTH_SECRET, { expiresIn: '15m' });

@@ -1,5 +1,5 @@
 import { removePlayer } from '../services/playerService.js'
-import { jwtAuth } from '../middlewares/jwtAuthentication.js'
+import { jwtAuth } from '../express-middlewares/jwtAuthentication.js'
 import { removeRefreshToken } from '../services/tokenService.js'
 
 function register(app) {  
@@ -17,6 +17,9 @@ function register(app) {
 			console.log(`Failed to remove refreshToken for player ${playerId}`);
 			return res.status(500).send({ error: 'Failed to remove player' });
 		}
+
+		// TODO: Invalidate authToken
+		// TODO: close socket
 
 		res.sendStatus(200);
 	});

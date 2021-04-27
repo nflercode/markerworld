@@ -18,7 +18,7 @@ function addTable(name) {
 }
 
 function findTable(tableId) {
-    return tables.find(t => t.id == tableId);
+    return tables.find(t => t.id === tableId);
 }
 
 function findTableByInvitationToken(invitationToken) {

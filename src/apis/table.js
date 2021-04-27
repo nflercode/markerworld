@@ -1,7 +1,9 @@
 import { createTable, getTable, getTableByInvitationToken } from '../services/tableService.js'
 import { createPlayer, getPlayers } from '../services/playerService.js'
-import { jwtAuth } from '../middlewares/jwtAuthentication.js'
+import { jwtAuth } from '../express-middlewares/jwtAuthentication.js'
 import { createAuthToken, createRefreshToken } from '../services/tokenService.js'
+import { io } from '../socketIo/socket.js'
+import { getRoomName } from '../helpers/socketRoomHelpers.js'
 
 function register(app) {
   app.post('/poker/tables', (req, res) => {
@@ -13,11 +15,11 @@ function register(app) {
 
     const authToken = createAuthToken(newPlayer.id, newTable.id);
     if (!authToken)
-      return res.send(500).send({ error: 'Failed to create auth token' });
+      return res.status(500).send({ error: 'Failed to create auth token' });
 
     const refreshToken = createRefreshToken(newPlayer.id, newTable.id);
     if (!refreshToken)
-      return res.send(500).send({ error: 'Failed to create refresh token' });
+      return res.status(500).send({ error: 'Failed to create refresh token' });
 
     res.send({
       table: {
@@ -55,11 +57,11 @@ function register(app) {
   
     const authToken = createAuthToken(newPlayer.id, table.id);
     if (!authToken)
-      return res.send(500).send({ error: 'Failed to create auth token' });
+      return res.status(500).send({ error: 'Failed to create auth token' });
 
     const refreshToken = createRefreshToken(newPlayer.id, table.id);
     if (!refreshToken)
-      return res.send(500).send({ error: 'Failed to create refresh token' });
+      return res.status(500).send({ error: 'Failed to create refresh token' });
 
     res.send({
       table: {
@@ -69,6 +71,9 @@ function register(app) {
       authToken,
       refreshToken
     });
+
+    const room = getRoomName(table.id);
+    io.to(room).emit('player-added', newPlayer);
   });
 }
 
