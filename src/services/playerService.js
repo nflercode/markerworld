@@ -9,7 +9,7 @@ function getPlayers(tableId) {
 }
 
 function removePlayer(playerId) {
-    deletePlayer(playerId);
+    return deletePlayer(playerId);
 }
 
 export { createPlayer, removePlayer, getPlayers }

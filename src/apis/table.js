@@ -3,7 +3,7 @@ import { createPlayer, getPlayers } from '../services/playerService.js'
 import { jwtAuth } from '../express-middlewares/jwtAuthentication.js'
 import { createAuthToken, createRefreshToken } from '../services/tokenService.js'
 import { io } from '../socketIo/socket.js'
-import { getRoomName } from '../helpers/socketRoomHelpers.js'
+import { getRoomName } from '../socketIo/socketRoomHelpers.js'
 
 function register(app) {
   app.post('/poker/tables', (req, res) => {
@@ -26,8 +26,14 @@ function register(app) {
         ...newTable,
         players,
       },
-      authToken,
-      refreshToken
+      authToken: {
+        ...authToken,
+        expiresAt: authToken.expiresAt.toISOString()
+      },
+      refreshToken: {
+        ...refreshToken,
+        expiresAt: refreshToken.expiresAt.toISOString()
+      }
     });
   });
   
@@ -68,8 +74,14 @@ function register(app) {
         ...table,
         players
       },
-      authToken,
-      refreshToken
+      authToken: {
+        ...authToken,
+        expiresAt: authToken.expiresAt.toISOString()
+      },
+      refreshToken: {
+        ...refreshToken,
+        expiresAt: refreshToken.expiresAt.toISOString()
+      }
     });
 
     const room = getRoomName(table.id);

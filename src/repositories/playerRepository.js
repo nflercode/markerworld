@@ -16,7 +16,7 @@ function addPlayer(tableId, name) {
 }
 
 function deletePlayer(playerId) {
-    const indexToRemove = players.findIndex(p => p.playerId === playerId);
+    const indexToRemove = players.findIndex(p => p.id === playerId);
     if (indexToRemove === -1)
         return false;
 

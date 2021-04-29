@@ -1,6 +1,8 @@
 import { removePlayer } from '../services/playerService.js'
 import { jwtAuth } from '../express-middlewares/jwtAuthentication.js'
 import { removeRefreshToken } from '../services/tokenService.js'
+import { disconnectSocketForPlayer } from '../socketIo/socket.js';
+import authExpireRepositoy from '../repositories/authExpireRepository.js';
 
 function register(app) {  
 	app.delete('/poker/players', jwtAuth, (req, res) => {
@@ -18,8 +20,10 @@ function register(app) {
 			return res.status(500).send({ error: 'Failed to remove player' });
 		}
 
+		disconnectSocketForPlayer(playerId);
+		authExpireRepositoy.deleteExpiration(playerId);
+
 		// TODO: Invalidate authToken
-		// TODO: close socket
 
 		res.sendStatus(200);
 	});

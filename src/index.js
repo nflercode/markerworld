@@ -7,6 +7,7 @@ import { register as registerPlayerApis } from './apis/player.js'
 import { register as registerTableApis } from './apis/table.js'
 import { setUp as setUpSocket } from './socketIo/socket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
+import { start } from './services/authExpiresMonitor.js'
 
 const allowedOrigins = [];
 
@@ -39,6 +40,8 @@ app.use(cors({
     callback();
   }
 }));
+
+start();
 
 const httpServer = http.createServer(app);
 setUpSocket(httpServer, allowedOrigins);
