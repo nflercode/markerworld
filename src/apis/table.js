@@ -44,8 +44,13 @@ function register(app) {
       console.log(`Could not find table with id ${tableId} for user with id ${req.auth.userId}`);
       return res.status(500).send({ error: 'Could not find table for user' });
     }
+
+    const players = getPlayers(tableId);
     
-    res.send(table);
+    res.send({
+      ...table,
+      players
+    });
   });
 
   app.post('/poker/tables/:invitationToken', (req, res) => {
