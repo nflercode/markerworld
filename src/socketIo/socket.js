@@ -40,7 +40,7 @@ function disconnectSocketForPlayer(playerId) {
   if (!socket) {
     console.error('Tried to disconnect non-existing socket');
     return;
-  }w
+  }
 
   socket.disconnect();
 }
