@@ -14,17 +14,14 @@ function setUp(httpServer, allowedOrigins) {
   });
 
   io.use(jwtAuth);
-  
-  // TODO: check socket reconnect new token
+
   io.on('connection', (socket) => {
     const { auth } = socket;
     const roomId = getRoomName(auth.tableId);
 
     socket.join(roomId);
 
-    // TODO: Verify authToken over time
-
-    console.log('Successfully connected player', auth.playerId, 'to room', roomId, socket.id);
+    console.log('Successfully connected player', auth.playerId, 'to room', roomId);
 
     socket.on('disconnect', () => {
       console.log('Disconneting socket for', auth.playerId);

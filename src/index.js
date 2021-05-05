@@ -16,7 +16,7 @@ console.log('Env is:', process.env.ENVIRONMENT);
 if (assumeLocal()) {
   console.log('starting as local');
   dotenv.config({path: process.cwd() + '/.env.local'});
-  allowedOrigins.push(/http:\/\/localhost:3001/);
+  allowedOrigins.push(/http:\/\/localhost:\d+/);
 }
 
 if (isProductionEnvironment()) {

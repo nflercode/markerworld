@@ -1,12 +1,10 @@
 import { getEarliestExpiration, getExpirationForAuth, deleteExpirationForAuth } from '../services/tokenService.js'
 import { disconnectSocketForPlayer } from '../socketIo/socket.js';
-const allExpires = [];
 
 function start() {
   const earliestExpiration = getEarliestExpiration();
-  const alreadyInQueue = allExpires.findIndex((ex) => ex.playerId === earliestExpiration.playerId) > -1;
 
-  if (!earliestExpiration || alreadyInQueue) {
+  if (!earliestExpiration) {
     setTimeout(() => {
       start();
     }, 1000);
@@ -21,13 +19,17 @@ function start() {
 
   setTimeout(() => {
     const expiration = getExpirationForAuth(earliestExpiration.playerId);
+    if (!expiration) {
+      console.log('expiration does no longer exist, player might have been removed');
+      start();
+      return;
+    }
+
     if (Date.parse(expiration.expiresAt) < Date.now()) {
       console.log('expired!');
 
-      const index = allExpires.findIndex((ex) => ex.playerId === earliestExpiration.playerId) > -1;
       disconnectSocketForPlayer(expiration.playerId);
       deleteExpirationForAuth(expiration.playerId);
-      allExpires.splice(index, 1);
     } else {
       console.log('no longer expired..');
     }
