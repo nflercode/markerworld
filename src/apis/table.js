@@ -1,4 +1,4 @@
-import { createTable, getTable, getTableByInvitationToken } from '../services/tableService.js'
+import { createTable, getTable, getTableByInvitationToken, setTableName } from '../services/tableService.js'
 import { createPlayer, getPlayers } from '../services/playerService.js'
 import { jwtAuth } from '../express-middlewares/jwtAuthentication.js'
 import { createAuthToken, createRefreshToken } from '../services/tokenService.js'
@@ -7,9 +7,7 @@ import { getRoomName } from '../socketIo/socketRoomHelpers.js'
 
 function register(app) {
   app.post('/poker/tables', (req, res) => {
-    const { body } = req;
-
-    const newTable = createTable(body.name);
+    const newTable = createTable("Bordet");
     const newPlayer = createPlayer(newTable.id, "Player 1");
     const players = [newPlayer];
 
@@ -53,7 +51,7 @@ function register(app) {
     });
   });
 
-  app.post('/poker/tables/:invitationToken', (req, res) => {
+  app.get('/poker/tables/:invitationToken', (req, res) => {
     const { invitationToken } = req.params;
   
     const table = getTableByInvitationToken(invitationToken);
@@ -63,7 +61,31 @@ function register(app) {
     }
 
     const players = getPlayers(table.id);
-    const newPlayer = createPlayer(table.id, `Player ${players.length + 1}`);
+
+    res.send({
+      table: {
+        ...table,
+        players
+      }
+    });
+  });
+
+  app.post('/poker/tables/:invitationToken', (req, res) => {
+    const { invitationToken } = req.params;
+    const { body } = req;
+
+    if (body.name.length < 1) {
+      return res.status(400).send({ error: 'Name must me at least 1 charcter'});
+    }
+  
+    const table = getTableByInvitationToken(invitationToken);
+    if (!table) {
+      console.error(`Could not find table for ${invitationToken}`);
+      return res.status(404).send({ error: 'Could not find table' });
+    }
+
+    const players = getPlayers(table.id);
+    const newPlayer = createPlayer(table.id, body.name);
     players.push(newPlayer);
   
     const authToken = createAuthToken(newPlayer.id, table.id);
@@ -91,6 +113,25 @@ function register(app) {
 
     const room = getRoomName(table.id);
     io.to(room).emit('player-added', newPlayer);
+  });
+
+  app.put('/poker/tables', jwtAuth, (req, res) => {
+    const { tableId } = req.auth;
+    const { body } = req;
+    if (!body.name || body.name.length < 1) 
+      return res.status(400).send({ error: 'Name must be atleast 1 charcter' });
+
+    const table = setTableName(tableId, body.name);
+  
+    if (!table) {
+      console.log(`Could not find table with id ${tableId} for user with id ${req.auth.userId}`);
+      return res.status(500).send({ error: 'Could not find table for user' });
+    }
+
+    res.send(table);
+
+    const room = getRoomName(tableId);
+    io.to(room).emit('table-name-change', table)
   });
 }
 
