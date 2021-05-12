@@ -25,4 +25,18 @@ function findTableByInvitationToken(invitationToken) {
     return tables.find(t => t.invitationToken === invitationToken);
 }
 
-export { addTable, findTable, findTableByInvitationToken }
+function changeTableName(tableId, name) {
+    const index = tables.findIndex((t) => t.id === tableId);
+    if (index < 0)
+        return false;
+
+    tables[index] = {
+        ...tables[index],
+        updatedAt: new Date().toISOString(),
+        name
+    };
+
+    return tables[index];
+}
+
+export { addTable, findTable, findTableByInvitationToken, changeTableName }

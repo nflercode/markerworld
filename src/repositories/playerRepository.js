@@ -16,7 +16,7 @@ function addPlayer(tableId, name) {
 }
 
 function deletePlayer(playerId) {
-    const indexToRemove = players.findIndex(p => p.playerId === playerId);
+    const indexToRemove = players.findIndex(p => p.id === playerId);
     if (indexToRemove === -1)
         return false;
 
@@ -28,4 +28,22 @@ function findPlayers(tableId) {
     return players.filter(p => p.tableId === tableId);
 }
 
-export { addPlayer, deletePlayer, findPlayers }
+function findPlayer(playerId) {
+    return players.find(p => p.id === playerId);
+}
+
+function setPlayerName(playerId, name) {
+    const index = players.findIndex((p) => p.id === playerId);
+    if (index < 0)
+        return false;
+
+    players[index] = {
+        ...players[index],
+        updatedAt: new Date().toISOString(),
+        name
+    };
+
+    return players[index];
+}
+
+export { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName }
