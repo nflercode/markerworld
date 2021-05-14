@@ -26,4 +26,4 @@ function deleteRefreshToken(playerId) {
     return true;
 }
 
-export { addRefreshToken, findRefreshToken, deleteRefreshToken }
+export default { addRefreshToken, findRefreshToken, deleteRefreshToken }

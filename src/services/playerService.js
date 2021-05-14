@@ -1,23 +1,23 @@
-import { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName } from '../repositories/playerRepository.js';
+import playerRepository from '../repositories/playerRepository.js';
 
 function createPlayer(tableId, name) {
-    return addPlayer(tableId, name);
+    return playerRepository.addPlayer(tableId, name);
 }
 
 function getPlayers(tableId) {
-    return findPlayers(tableId);
+    return playerRepository.findPlayers(tableId);
 }
 
 function getPlayer(playerId) {
-    return findPlayer(playerId);
+    return playerRepository.findPlayer(playerId);
 }
 
 function removePlayer(playerId) {
-    return deletePlayer(playerId);
+    return playerRepository.deletePlayer(playerId);
 }
 
 function updatePlayerName(playerId, name) {
-    return setPlayerName(playerId, name);
+    return playerRepository.setPlayerName(playerId, name);
 }
 
 export { createPlayer, removePlayer, getPlayers, getPlayer, updatePlayerName }
