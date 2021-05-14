@@ -55,7 +55,7 @@ jobs:
           clusterName: k8s-nfler-dev
 
       - name: Setup namespace
-        run: kubectl create namespace ${{ env.APP_NAME }}-pr-${{ github.event.number }} --dry-run=client -o yaml | kubectl apply -f -
+        run: kubectl create namespace ${{ env.APP_NAME }}-pr-${{ github.event.number }} --dry-run=true -o yaml | kubectl apply -f -
 
       - name: Create jwt auth secret
         run: kubectl create secret -n ${{ env.APP_NAME }}-pr-${{ github.event.number }} generic jwt-auth-secret --from-literal=JWT_AUTH_SECRET=${{ secrets.PR_ENV_JWT_AUTH_SECRET }}
