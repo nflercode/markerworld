@@ -1,0 +1,3 @@
+const MAX_PLAYERS_IN_TABLE = 4;
+
+export { MAX_PLAYERS_IN_TABLE }
