@@ -27,7 +27,7 @@ if (isProductionEnvironment()) {
 if (isPrEnvironment()) {
   console.log('starting as prenv');
   allowedOrigins.push(/https:\/\/pr-\d+.nfler.se/);
-  allowedOrigins.push(/http:\/\/localhost:3001/);
+  allowedOrigins.push(/http:\/\/localhost::\d+/);
 }
 
 const app = express();
