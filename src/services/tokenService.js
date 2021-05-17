@@ -1,8 +1,4 @@
-import {
-    addRefreshToken,
-    findRefreshToken,
-    deleteRefreshToken
-} from '../repositories/refreshTokenRepository.js'
+import refreshTokenRepository from '../repositories/refreshTokenRepository.js'
 import authExpireRepositry from '../repositories/authExpireRepository.js';
 import { generateAuthToken, generateRefreshToken } from '../jwt/tokenHandler.js'
 
@@ -23,7 +19,7 @@ function createAuthToken(playerId, tableId) {
 
 function createRefreshToken(playerId, tableId) {
     const refreshToken = generateRefreshToken({ playerId, tableId });
-    addRefreshToken(refreshToken.token, playerId);
+    refreshTokenRepository.addRefreshToken(refreshToken.token, playerId);
     return refreshToken;
 }
 
@@ -40,11 +36,11 @@ function deleteExpirationForAuth(playerId) {
 }
 
 function getRefreshToken(playerId) {
-    return findRefreshToken(playerId);
+    return refreshTokenRepository.findRefreshToken(playerId);
 }
 
 function removeRefreshToken(playerId) {
-    return deleteRefreshToken(playerId)
+    return refreshTokenRepository.deleteRefreshToken(playerId)
 }
 
 export {

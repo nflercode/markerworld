@@ -1,4 +1,4 @@
-import { verifyAuthToken } from '../jwt/tokenHandler.js';
+import { verifyAuthToken } from '../../jwt/tokenHandler.js';
 
 function jwtAuth(socket, next) {
   const authToken = socket.handshake.auth.token;

@@ -39,4 +39,4 @@ function changeTableName(tableId, name) {
     return tables[index];
 }
 
-export { addTable, findTable, findTableByInvitationToken, changeTableName }
+export default { addTable, findTable, findTableByInvitationToken, changeTableName }

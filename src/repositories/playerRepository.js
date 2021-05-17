@@ -46,4 +46,4 @@ function setPlayerName(playerId, name) {
     return players[index];
 }
 
-export { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName }
+export default { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName }

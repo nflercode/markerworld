@@ -1,11 +1,14 @@
 import { Server as SocketIo } from 'socket.io'
 import { getRoomName } from './socketRoomHelpers.js';
-import { jwtAuth } from '../socket-middlewares/jwtAuthentication.js';
+import { jwtAuth } from './middlewares/jwtAuthentication.js';
 
-let io;
 const _allSockets = {};
+let io;
 
-function setUp(httpServer, allowedOrigins) {
+function connect(httpServer, allowedOrigins) {
+  if (io)
+    return io;
+
   io = new SocketIo(httpServer, {
     cors: {
       origin: allowedOrigins,
@@ -13,8 +16,13 @@ function setUp(httpServer, allowedOrigins) {
     }
   });
 
+  io = io.of('/table');
   io.use(jwtAuth);
 
+  handleOnConnectEvent(io);
+}
+
+function handleOnConnectEvent(io) {
   io.on('connection', (socket) => {
     const { auth } = socket;
     const roomId = getRoomName(auth.tableId);
@@ -42,4 +50,4 @@ function disconnectSocketForPlayer(playerId) {
   socket.disconnect();
 }
 
-export { setUp, io, disconnectSocketForPlayer }
+export { connect, disconnectSocketForPlayer, io};

@@ -2,12 +2,12 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import http from 'http'
-import { register as registerAuthApis } from './apis/auth.js'
-import { register as registerPlayerApis } from './apis/player.js'
-import { register as registerTableApis } from './apis/table.js'
-import { setUp as setUpSocket } from './socketIo/socket.js';
+import { register as registerAuthApis } from './apis/auth/index.js'
+import { register as registerPlayerApis } from './apis/player/index.js'
+import { register as registerTableApis } from './apis/table/index.js'
+import { connect as connectSocket } from './sockets/tableSocket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
-import { start } from './services/authExpiresMonitor.js'
+import AuthExpiresMonitor from './services/authExpiresMonitor.js'
 
 const allowedOrigins = [];
 
@@ -27,7 +27,7 @@ if (isProductionEnvironment()) {
 if (isPrEnvironment()) {
   console.log('starting as prenv');
   allowedOrigins.push(/https:\/\/pr-\d+.nfler.se/);
-  allowedOrigins.push(/http:\/\/localhost:3001/);
+  allowedOrigins.push(/http:\/\/localhost:\d+/);
 }
 
 const app = express();
@@ -41,10 +41,10 @@ app.use(cors({
   }
 }));
 
-start();
+AuthExpiresMonitor().start();
 
 const httpServer = http.createServer(app);
-setUpSocket(httpServer, allowedOrigins);
+connectSocket(httpServer, allowedOrigins);
 
 registerAuthApis(app);
 registerPlayerApis(app);
