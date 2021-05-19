@@ -3,7 +3,6 @@ import { getPlayers } from '../../services/playerService.js';
 import { jwtAuth } from '../middlewares/jwtAuthentication.js';
 import { createTableWithPlayersPayload } from './api-payloads.js';
 
-
 function register(app) {
   app.get('/poker/tables', jwtAuth, (req, res) => {
     const { tableId } = req.auth;
@@ -15,7 +14,6 @@ function register(app) {
     }
 
     const players = getPlayers(tableId);
-    
     res.send(createTableWithPlayersPayload(table, players));
   });
 }

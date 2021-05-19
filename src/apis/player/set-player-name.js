@@ -2,6 +2,7 @@ import { updatePlayerName } from '../../services/playerService.js';
 import { jwtAuth } from '../middlewares/jwtAuthentication.js';
 import { io as tableIo } from '../../sockets/tableSocket.js';
 import { createPlayerPayload } from './api-payloads.js';
+import { createErrorPayload } from '../common/common-payloads.js';
 
 function register(app) {  
 	app.put('/poker/players', jwtAuth, (req, res) => {
@@ -16,7 +17,7 @@ function register(app) {
 		if (!player)
 			return res.status(500).send(createErrorPayload('Failed to update player'));
 
-		tableIo.emit('player-updated', player);
+		tableIo.emit('player-name-change', { playerId, name: player.name });
 		res.send(createPlayerPayload(player))
 	});
 }

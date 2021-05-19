@@ -4,15 +4,15 @@ import { generateAuthToken, generateRefreshToken } from '../jwt/tokenHandler.js'
 
 function createAuthToken(playerId, tableId) {
     const authToken = generateAuthToken({ playerId, tableId });
-    const expiratioAsISO = authToken.expiresAt.toISOString();
+    const expirationAsISO = authToken.expiresAt.toISOString();
     
     const expirationEntiy = authExpireRepositry.getExpiration(playerId);
     if (expirationEntiy) {
         console.log('Updating expirationtime for', playerId);
-        authExpireRepositry.updateExpiration(expiratioAsISO, playerId);
+        authExpireRepositry.updateExpiration(expirationAsISO, playerId);
     } else { 
         console.log('Adding expiration time for', playerId);
-        authExpireRepositry.addAuthExpires(expiratioAsISO, playerId);
+        authExpireRepositry.addAuthExpires(expirationAsISO, playerId);
     }
     return authToken;
 }
