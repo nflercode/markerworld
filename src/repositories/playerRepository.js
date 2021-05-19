@@ -1,10 +1,11 @@
 const players = [];
 let id = 1;
 
-function addPlayer(tableId, name) {
+function addPlayer(tableId, name, avatarId) {
     const newPlayer = {
         id: id ++,
         tableId,
+        avatarId,
         name,
         createdAt: new Date().toISOString(),
         updatedAt: null
