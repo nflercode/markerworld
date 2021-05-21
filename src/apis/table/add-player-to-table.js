@@ -6,11 +6,11 @@ import { getRoomName } from '../../sockets/socketRoomHelpers.js'
 import { createTableWithAuthPayload } from './api-payloads.js'
 import { MAX_PLAYERS_IN_TABLE } from '../../constants.js'
 import { createErrorPayload } from '../common/common-payloads.js'
-import avatarService from '../../services/avatarService.js';
 
 function register(app) {
   app.post('/poker/tables/:invitationToken', (req, res) => {
     const { invitationToken } = req.params;
+    const { body } = req;
 
     const table = getTableByInvitationToken(invitationToken);
     if (!table) {
@@ -23,8 +23,9 @@ function register(app) {
       return res.status(400).send(createErrorPayload('Maximum players in table.'));
     }
 
-    const newPlayer = createPlayer(table.id, `Player ${(players.length + 1)}`);
-    players.push(newPlayer);
+    const playerName = (body.name && body.name != '') ? body.name : `Player ${(players.length + 1)}`;
+    const newPlayer = createPlayer(table.id, playerName);
+    players.push({ ...newPlayer, isMe: true });
   
     const authToken = createAuthToken(newPlayer.id, table.id);
     if (!authToken)

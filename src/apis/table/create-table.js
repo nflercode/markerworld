@@ -7,7 +7,7 @@ function register(app) {
   app.post('/poker/tables', (_, res) => {
     const newTable = createTable("Bordet");
     const newPlayer = createPlayer(newTable.id, "Player 1");
-    const players = [newPlayer];
+    const players = [{ ...newPlayer, isMe: true }];
 
     const authToken = createAuthToken(newPlayer.id, newTable.id);
     if (!authToken)
