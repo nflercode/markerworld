@@ -5,7 +5,7 @@ import { createTableWithPlayersPayload } from './api-payloads.js';
 
 function register(app) {
   app.get('/poker/tables', jwtAuth, (req, res) => {
-    const { tableId } = req.auth;
+    const { tableId, playerId } = req.auth;
 
     const table = getTable(tableId);
     if (!table) {
@@ -13,7 +13,11 @@ function register(app) {
       return res.status(404).send(createErrorPayload('Could not find table for user'));
     }
 
-    const players = getPlayers(tableId);
+    let players = getPlayers(tableId);
+
+    const isMePlayerIndex = players.findIndex(player => player.id === playerId);
+    players[isMePlayerIndex].isMe = true;
+
     res.send(createTableWithPlayersPayload(table, players));
   });
 }

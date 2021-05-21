@@ -2,7 +2,8 @@ import playerRepository from '../repositories/playerRepository.js';
 import avatarService from './avatarService.js';
 
 function createPlayer(tableId, name) {
-    const avatar = avatarService.getRandomAvatar();
+    const playersInTable = getPlayers(tableId);
+    const avatar = avatarService.getRandomAvatar(playersInTable.map(p => p.avatarId));
     const player = playerRepository.addPlayer(tableId, name, avatar.id);
 
     return {
@@ -28,7 +29,11 @@ function removePlayer(playerId) {
 }
 
 function updatePlayerName(playerId, name) {
-    return playerRepository.setPlayerName(playerId, name);
+    const player = playerRepository.setPlayerName(playerId, name);
+    return {
+        ...player,
+        avatar: avatarService.getAvatar(player.avatarId)
+    }
 }
 
 export { createPlayer, removePlayer, getPlayers, getPlayer, updatePlayerName }
