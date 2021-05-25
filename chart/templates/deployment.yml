@@ -32,6 +32,6 @@ spec:
                 name: jwt-refresh-secret
                 key: JWT_REFRESH_SECRET
           - name: DB_PASSWORD
-            value: {{ .Values.secrets.db_password }}
+            value: '{{ .Values.secrets.db_password }}'
         ports:
           - containerPort: {{ .Values.service.port }}
