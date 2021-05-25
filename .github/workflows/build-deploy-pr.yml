@@ -66,5 +66,5 @@ jobs:
       - uses: azure/setup-helm@v1
 
       - name: Deploy with helm
-        run: helm upgrade --set environment=prenv --set image.tag=${{ steps.meta.outputs.version }} --set pr=${{ github.event.number }} ${{ env.APP_NAME }}-pr-${{ github.event.number }} ./chart -i -n ${{ env.APP_NAME }}-pr-${{ github.event.number }}
+        run: helm upgrade --set environment=prenv --set image.tag=${{ steps.meta.outputs.version }} --set pr=${{ github.event.number }} --set secrets.db_password=${{ secrets.DB_PASSWORD }} ${{ env.APP_NAME }}-pr-${{ github.event.number }} ./chart -i -n ${{ env.APP_NAME }}-pr-${{ github.event.number }}
 

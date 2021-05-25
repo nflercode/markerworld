@@ -6,6 +6,9 @@ image:
   pullPolicy: Always
   tag: latest
 
+secrets:
+  db_password: ''
+
 service:
   port: 80
 

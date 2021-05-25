@@ -7,6 +7,7 @@ import { register as registerPlayerApis } from './apis/player/index.js'
 import { register as registerTableApis } from './apis/table/index.js'
 import { connect as connectSocket } from './sockets/tableSocket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
+import rdb from './repositories/rdb.js'
 import AuthExpiresMonitor from './services/authExpiresMonitor.js'
 
 const allowedOrigins = [];
@@ -40,6 +41,8 @@ app.use(cors({
     callback();
   }
 }));
+
+rdb.connect();
 
 AuthExpiresMonitor().start();
 
