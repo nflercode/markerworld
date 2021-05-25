@@ -3,7 +3,7 @@ import r from 'rethinkdb';
 async function connect() {
   let connection;
   try {
-    connection = await r.connect({ host: '10.245.135.3', port: 28015, db: 'nfler_db', password: process.env.DB_PASSWORD, user='admin' });
+    connection = await r.connect({ host: '10.245.135.3', port: 28015, db: 'nfler_db', password: process.env.DB_PASSWORD, user: 'admin' });
     console.log('Successfully connected to db');
   } catch (err) {
     console.error('Failed to connect to db', err);
