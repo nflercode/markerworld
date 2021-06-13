@@ -1,28 +1,29 @@
-const refreshTokens = [];
-let id = 1;
+import thinky from 'thinky';
+import dbConfig from '../database/rdbConfig.js';
 
-function addRefreshToken(refreshToken, playerId) {
-    const newRefreshToken = {
-        id: id++,
+const t = thinky(dbConfig);
+
+const RefreshToken = t.createModel('RefreshToken', {
+  id: t.type.string(),
+  playerId: t.type.string(),
+  refreshToken: t.type.string(),
+});
+
+async function addRefreshToken(refreshToken, playerId) {
+    const newRefreshToken = new RefreshToken({
         playerId,
         refreshToken
-    };
+    });
 
-    refreshTokens.push(newRefreshToken);
-
-    return newRefreshToken;
+    return RefreshToken.save(newRefreshToken);
 }
 
-function findRefreshToken(playerId) {
-    return refreshTokens.find(t => t.playerId === playerId);
+async function findRefreshToken(playerId) {
+    return RefreshToken.filter({ playerId }).then(token => token[0]);
 }
 
-function deleteRefreshToken(playerId) {
-    const indexToRemove = refreshTokens.findIndex(t => t.playerId === playerId);
-    if (indexToRemove === -1)
-        return false;
-
-    refreshTokens.splice(indexToRemove, 1);
+async function deleteRefreshToken(playerId) {
+    await RefreshToken.filter({ playerId }).delete().run();
     return true;
 }
 

@@ -1,7 +1,7 @@
 import avatarRepository from '../repositories/avatarRepository.js';
 
-function getRandomAvatar(ignoreIds = []) {
-  let allAvatars = avatarRepository.getAll();
+async function getRandomAvatar(ignoreIds = []) {
+  let allAvatars = await avatarRepository.getAll();
   if (ignoreIds.length > 0)
     allAvatars = allAvatars.filter(avatar => !ignoreIds.includes(avatar.id));
 
@@ -9,8 +9,12 @@ function getRandomAvatar(ignoreIds = []) {
   return allAvatars[randomIndex];
 }
 
-function getAvatar(avatarId) {
+async function getAvatar(avatarId) {
   return avatarRepository.getAvatar(avatarId);
 }
 
-export default { getRandomAvatar, getAvatar };
+async function setupAvatarsDebug() {
+  return avatarRepository.debugSetupAvatars();
+}
+
+export default { getRandomAvatar, getAvatar, setupAvatarsDebug };

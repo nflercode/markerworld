@@ -1,39 +1,38 @@
 import playerRepository from '../repositories/playerRepository.js';
 import avatarService from './avatarService.js';
 
-function createPlayer(tableId, name) {
-    const playersInTable = getPlayers(tableId);
-    const avatar = avatarService.getRandomAvatar(playersInTable.map(p => p.avatarId));
-    const player = playerRepository.addPlayer(tableId, name, avatar.id);
+async function createPlayer(tableId, name) {
+    const playersInTable = await getPlayers(tableId);
+    const avatar = await avatarService.getRandomAvatar(playersInTable.map(p => p.avatarId));
 
-    return {
-        ...player,
-        avatar
+    try {
+        const player = await playerRepository.addPlayer(tableId, name, avatar.id);
+        return player;
+    } catch (err) {
+        console.error('FAILED TO CREATE PLAYER', err);
     }
 }
 
-function getPlayers(tableId) {
-    const players = playerRepository.findPlayers(tableId);
-    return players.map((player) => ({
-        ...player,
-        avatar: avatarService.getAvatar(player.avatarId)
-    }));
+async function getPlayers(tableId) {
+    const players = await playerRepository.findPlayers(tableId);
+    return players;
 }
 
-function getPlayer(playerId) {
+async function getPlayer(playerId) {
     return playerRepository.findPlayer(playerId);
 }
 
-function removePlayer(playerId) {
-    return playerRepository.deletePlayer(playerId);
+async function removePlayer(playerId) {
+    try {
+        return await playerRepository.deletePlayer(playerId);
+    } catch (err) {
+        console.error('FAILED TO REMOVE PLAYER ', playerId, err);
+    }
 }
 
-function updatePlayerName(playerId, name) {
-    const player = playerRepository.setPlayerName(playerId, name);
-    return {
-        ...player,
-        avatar: avatarService.getAvatar(player.avatarId)
-    }
+async function updatePlayerName(playerId, name) {
+    const player = await playerRepository.setPlayerName(playerId, name);
+    return player
 }
 
 export { createPlayer, removePlayer, getPlayers, getPlayer, updatePlayerName }

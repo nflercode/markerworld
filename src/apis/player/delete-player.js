@@ -6,16 +6,16 @@ import authExpireRepositoy from '../../repositories/authExpireRepository.js';
 import { createErrorPayload } from '../common/common-payloads.js';
 
 function register(app) {
-  app.delete('/poker/players', jwtAuth, (req, res) => {
+  app.delete('/poker/players', jwtAuth, async (req, res) => {
 		const { playerId } = req.auth;
 
-		const playerRemoved = removePlayer(playerId);
+		const playerRemoved = await removePlayer(playerId);
 		if (!playerRemoved) {
 			console.error(`Failed to remove player ${playerId}`);
 			return res.status(500).send(createErrorPayload('Failed to remove player'));
 		}
 
-		const refreshTokenRemoved = removeRefreshToken(playerId);
+		const refreshTokenRemoved = await removeRefreshToken(playerId);
 		if (!refreshTokenRemoved) {
 			console.log(`Failed to remove refreshToken for player ${playerId}`);
 			return res.status(500).send(createErrorPayload('Failed to remove player'));

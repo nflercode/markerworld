@@ -8,24 +8,23 @@ import { MAX_PLAYERS_IN_TABLE } from '../../constants.js'
 import { createErrorPayload } from '../common/common-payloads.js'
 
 function register(app) {
-  app.post('/poker/tables/:invitationToken', (req, res) => {
+  app.post('/poker/tables/:invitationToken', async (req, res) => {
     const { invitationToken } = req.params;
     const { body } = req;
 
-    const table = getTableByInvitationToken(invitationToken);
+    const table = await getTableByInvitationToken(invitationToken);
     if (!table) {
       console.error(`Could not find table for ${invitationToken}`);
       return res.status(404).send(createErrorPayload('Could not find table'));
     }
 
-    const players = getPlayers(table.id);
-    if (players.length === MAX_PLAYERS_IN_TABLE) {
+    if (table.players.length === MAX_PLAYERS_IN_TABLE) {
       return res.status(400).send(createErrorPayload('Maximum players in table.'));
     }
 
     const playerName = (body.name && body.name != '') ? body.name : `Player ${(players.length + 1)}`;
-    const newPlayer = createPlayer(table.id, playerName);
-    players.push({ ...newPlayer, isMe: true });
+    const newPlayer = await createPlayer(table.id, playerName);
+    table.players.push({ ...newPlayer, isMe: true });
   
     const authToken = createAuthToken(newPlayer.id, table.id);
     if (!authToken)

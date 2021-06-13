@@ -1,42 +1,42 @@
-import { v4 as uuidv4 } from 'uuid'
+import thinky from 'thinky';
+import { v4 as uuidv4 } from 'uuid';
+import dbConfig from '../database/rdbConfig.js';
+import playerRepository from './playerRepository.js';
 
-const tables = [];
-let id = 1;
+const t = thinky(dbConfig);
+const r = t.r;
 
-function addTable(name) {
-    const newTable = {
-        id: id++,
-        name,
-        invitationToken: uuidv4(),
-        createdAt: new Date().toISOString(),
-        updatedAt: null
-    }
+const Table = t.createModel('Table', {
+  id: t.type.string(),
+  name: t.type.string().min(1),
+  invitationToken: t.type.string(),
+  createdAt: t.type.date().default(r.now()),
+  createdAt: t.type.date()
+});
 
-    tables.push(newTable);
+Table.hasMany(playerRepository.Player, 'players', 'id', 'tableId');
 
-    return newTable;
+async function addTable(name) {
+  const newTable = new Table({
+    name,
+    invitationToken: uuidv4(),
+    createdAt: new Date().toISOString(),
+    updatedAt: null
+  });
+
+  return Table.save(newTable);
 }
 
-function findTable(tableId) {
-    return tables.find(t => t.id === tableId);
+async function findTable(tableId) {
+    return await Table.get(tableId).getJoin({ players: { avatar: true } }).run();
 }
 
-function findTableByInvitationToken(invitationToken) {
-    return tables.find(t => t.invitationToken === invitationToken);
+async function findTableByInvitationToken(invitationToken) {
+  return Table.filter({ invitationToken }).getJoin({ players: true }).run().then(tables => tables[0]);
 }
 
-function changeTableName(tableId, name) {
-    const index = tables.findIndex((t) => t.id === tableId);
-    if (index < 0)
-        return false;
-
-    tables[index] = {
-        ...tables[index],
-        updatedAt: new Date().toISOString(),
-        name
-    };
-
-    return tables[index];
+async function changeTableName(tableId, name) {
+  return Table.get(tableId).update({ name }).run();
 }
 
 export default { addTable, findTable, findTableByInvitationToken, changeTableName }

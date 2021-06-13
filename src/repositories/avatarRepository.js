@@ -1,47 +1,57 @@
+import thinky from 'thinky';
+import dbConfig from '../database/rdbConfig.js';
+
+const t = thinky(dbConfig);
+
+const Avatar = t.createModel('Avatar', {
+  id: t.type.string(),
+  name: t.type.string(),
+  imageName: t.type.string()
+});
+
 const avatars = [
   {
-    id: 1,
     name: 'Egirl Elin',
     imageName: 'egirl-elin.jpg'
   },
   {
-    id:2,
     name: 'Förmögne Fredrik',
     imageName: 'formogne-fredrik.jpg'
   },
   {
-    id: 3,
     name: 'Groteska Gusten',
     imageName: 'groteska-gusten.jpg'
   },
   {
-    id: 4,
     name: 'Hårige Harriette',
     imageName: 'harige-harriette.jpg'
   },
   {
-    id: 5,
     name: 'Ostiga Omar',
     imageName: 'ostiga-omar.jpg'
   },
   {
-    id: 6,
     name: 'Pundar Pontus',
     imageName: 'pundar-pontus.jpg'
   },
   {
-    id: 7,
     name: 'Sliskige Stefan',
     imageName: 'sliskiga-stefan.jpg'
   }
 ];
 
-function getAll() {
-  return avatars;
+async function debugSetupAvatars() {
+  const result = await Avatar.save(avatars);
+  console.log('Avatars created');
+  return result;
+}
+
+async function getAll() {
+  return Avatar.run();
 }
 
 function getAvatar(avatarId) {
-  return avatars.find((avatar) => avatar.id === avatarId);
+  return Avatar.get(avatarId).run();
 }
 
-export default { getAll, getAvatar }
+export default { getAll, getAvatar, debugSetupAvatars, Avatar }

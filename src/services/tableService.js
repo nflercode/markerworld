@@ -1,19 +1,35 @@
 import tableRepository from '../repositories/tableRepository.js'
 
-function createTable(name) {
-    return tableRepository.addTable(name);
+async function createTable(name) {
+    try {
+        return await tableRepository.addTable(name);
+    } catch (err) {
+        console.error('FAILED TO SAVE TABLE: ', err);
+    }
 }
 
-function getTable(tableId) {
-    return tableRepository.findTable(tableId);
+async function getTable(tableId) {
+    try {
+        return await tableRepository.findTable(tableId);
+    } catch (err) {
+        console.error('Failed to get table ',  tableId, err);
+    }
 }
 
-function setTableName(tableId, name) {
-    return tableRepository.changeTableName(tableId, name);
+async function setTableName(tableId, name) {
+    try {
+        return tableRepository.changeTableName(tableId, name);
+    } catch (err) {
+        console.error('Failed to update name of table', err);
+    }
 }
 
-function getTableByInvitationToken(invitationToken) {
-    return tableRepository.findTableByInvitationToken(invitationToken);
+async function getTableByInvitationToken(invitationToken) {
+    try {
+        return await tableRepository.findTableByInvitationToken(invitationToken);
+    } catch (err) {
+        console.error('FAILED TO GET BY INV TOKEN', err);
+    }
 }
 
 export { createTable, getTable, getTableByInvitationToken, setTableName }

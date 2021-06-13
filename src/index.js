@@ -7,8 +7,9 @@ import { register as registerPlayerApis } from './apis/player/index.js'
 import { register as registerTableApis } from './apis/table/index.js'
 import { connect as connectSocket } from './sockets/tableSocket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
-import rdb from './repositories/rdb.js'
-import AuthExpiresMonitor from './services/authExpiresMonitor.js'
+import AuthExpiresMonitor from './services/authExpiresMonitor.js';
+
+import avatarService from './services/avatarService.js';
 
 const allowedOrigins = [];
 
@@ -16,7 +17,7 @@ console.log('Env is:', process.env.ENVIRONMENT);
 
 if (assumeLocal()) {
   console.log('starting as local');
-  dotenv.config({path: process.cwd() + '/.env.local'});
+  dotenv.config({ path: process.cwd() + '/.env.local' });
   allowedOrigins.push(/http:\/\/localhost:\d+/);
 }
 
@@ -42,9 +43,9 @@ app.use(cors({
   }
 }));
 
-rdb.connect();
-
 AuthExpiresMonitor().start();
+
+//avatarService.setupAvatarsDebug();
 
 const httpServer = http.createServer(app);
 connectSocket(httpServer, allowedOrigins);

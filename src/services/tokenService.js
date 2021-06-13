@@ -17,9 +17,9 @@ function createAuthToken(playerId, tableId) {
     return authToken;
 }
 
-function createRefreshToken(playerId, tableId) {
+async function createRefreshToken(playerId, tableId) {
     const refreshToken = generateRefreshToken({ playerId, tableId });
-    refreshTokenRepository.addRefreshToken(refreshToken.token, playerId);
+    await refreshTokenRepository.addRefreshToken(refreshToken.token, playerId);
     return refreshToken;
 }
 
@@ -35,12 +35,16 @@ function deleteExpirationForAuth(playerId) {
     return authExpireRepositry.deleteExpiration(playerId);
 }
 
-function getRefreshToken(playerId) {
+async function getRefreshToken(playerId) {
     return refreshTokenRepository.findRefreshToken(playerId);
 }
 
-function removeRefreshToken(playerId) {
-    return refreshTokenRepository.deleteRefreshToken(playerId)
+async function removeRefreshToken(playerId) {
+    try {
+        return await refreshTokenRepository.deleteRefreshToken(playerId);
+    } catch (err) {
+        console.error('FAILED TO DELETE REFRESH TOKEN', playerId, err);
+    }
 }
 
 export {
