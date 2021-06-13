@@ -1,5 +1,6 @@
 import refreshTokenRepository from '../repositories/refreshTokenRepository.js';
 import { generateAuthToken, generateRefreshToken } from '../jwt/tokenHandler.js'
+import bcrypt from 'bcrypt';
 
 function createAuthToken(playerId, tableId) {
     const authToken = generateAuthToken({ playerId, tableId });
@@ -8,12 +9,15 @@ function createAuthToken(playerId, tableId) {
 
 async function createRefreshToken(playerId, tableId) {
     const refreshToken = generateRefreshToken({ playerId, tableId });
-    await refreshTokenRepository.addRefreshToken(refreshToken.token, playerId);
+
+    const hashedRefreshToken = await bcrypt.hash(refreshToken.token, 10);
+    await refreshTokenRepository.addRefreshToken(hashedRefreshToken, playerId);
     return refreshToken;
 }
 
-async function getRefreshToken(playerId) {
-    return refreshTokenRepository.findRefreshToken(playerId);
+async function compareRefreshToken(playerId, refreshToken) {
+    const storedRefreshToken = await refreshTokenRepository.findRefreshToken(playerId);
+    return await bcrypt.compare(refreshToken, storedRefreshToken.refreshToken);
 }
 
 async function removeRefreshToken(playerId) {
@@ -26,7 +30,7 @@ async function removeRefreshToken(playerId) {
 
 export {
     createRefreshToken,
-    getRefreshToken,
+    compareRefreshToken,
     removeRefreshToken,
     createAuthToken
 }

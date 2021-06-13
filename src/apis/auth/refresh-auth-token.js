@@ -1,4 +1,4 @@
-import { createAuthToken, getRefreshToken } from '../../services/tokenService.js'
+import { createAuthToken, compareRefreshToken } from '../../services/tokenService.js'
 import { verifyRefreshToken } from '../../jwt/tokenHandler.js'
 import { createAuthTokenPayload } from './api-payloads.js';
 import { createErrorPayload } from '../common/common-payloads.js';
@@ -11,8 +11,8 @@ function register(app) {
     if (!payload)
       return res.status(401).send(createErrorPayload('Failed to verify token, token might be expired'));
 
-    const tokenEntity = await getRefreshToken(payload.playerId);
-    if (!tokenEntity || tokenEntity.refreshToken !== body.refreshToken)
+    const isOk = await compareRefreshToken(payload.playerId, body.refreshToken);
+    if (!isOk)
       return res.status(401).send(createErrorPayload('Token is not valid, player might have left the table'));
 
     const authToken = createAuthToken(payload.playerId, payload.tableId);
