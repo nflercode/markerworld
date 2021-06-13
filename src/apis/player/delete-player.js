@@ -2,7 +2,6 @@ import { removePlayer } from '../../services/playerService.js'
 import { jwtAuth } from '../middlewares/jwtAuthentication.js'
 import { removeRefreshToken } from '../../services/tokenService.js'
 import { io as tableIo, disconnectSocketForPlayer } from '../../sockets/tableSocket.js';
-import authExpireRepositoy from '../../repositories/authExpireRepository.js';
 import { createErrorPayload } from '../common/common-payloads.js';
 
 function register(app) {
@@ -22,7 +21,6 @@ function register(app) {
 		}
 
 		disconnectSocketForPlayer(playerId);
-		authExpireRepositoy.deleteExpiration(playerId);
 
 		// TODO: Invalidate authToken
 

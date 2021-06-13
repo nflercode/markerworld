@@ -7,7 +7,6 @@ import { register as registerPlayerApis } from './apis/player/index.js'
 import { register as registerTableApis } from './apis/table/index.js'
 import { connect as connectSocket } from './sockets/tableSocket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
-import AuthExpiresMonitor from './services/authExpiresMonitor.js';
 
 import avatarService from './services/avatarService.js';
 
@@ -42,8 +41,6 @@ app.use(cors({
     callback();
   }
 }));
-
-AuthExpiresMonitor().start();
 
 //avatarService.setupAvatarsDebug();
 

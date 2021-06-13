@@ -12,17 +12,13 @@ function connect(httpServer, allowedOrigins) {
   io = new SocketIo(httpServer, {
     cors: {
       origin: allowedOrigins,
-      methods: ["GET", "POST"]
+      methods: ["GET"]
     }
   });
 
   io = io.of('/table');
   io.use(jwtAuth);
 
-  handleOnConnectEvent(io);
-}
-
-function handleOnConnectEvent(io) {
   io.on('connection', (socket) => {
     const { auth } = socket;
     const roomId = getRoomName(auth.tableId);

@@ -1,5 +1,5 @@
 import { getTableByInvitationToken } from '../../services/tableService.js'
-import { createPlayer, getPlayers } from '../../services/playerService.js'
+import { createPlayer } from '../../services/playerService.js'
 import { createAuthToken, createRefreshToken } from '../../services/tokenService.js'
 import { io as tableIo } from '../../sockets/tableSocket.js'
 import { getRoomName } from '../../sockets/socketRoomHelpers.js'
