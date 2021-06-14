@@ -21,7 +21,7 @@ async function addPlayer(tableId, name, avatarId) {
         tableId,
         avatarId,
         name,
-        createdAt: new Date().toISOString(),
+        createdAt: t.type.date().default(r.now()),
         updatedAt: null
     });
 

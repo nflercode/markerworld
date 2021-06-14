@@ -1,10 +1,8 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import cors from 'cors'
-import http from 'http'
-import { register as registerAuthApis } from './apis/auth/index.js'
-import { register as registerPlayerApis } from './apis/player/index.js'
-import { register as registerTableApis } from './apis/table/index.js'
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import http from 'http';
+import apiLoader from './apis/api-loader.js';
 import { connect as connectSocket } from './sockets/tableSocket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
 
@@ -47,9 +45,7 @@ app.use(cors({
 const httpServer = http.createServer(app);
 connectSocket(httpServer, allowedOrigins);
 
-registerAuthApis(app);
-registerPlayerApis(app);
-registerTableApis(app);
+apiLoader.loadApis(app);
 
 const port = 3000;
 httpServer.listen(port, () => {
