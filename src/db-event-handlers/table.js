@@ -13,7 +13,6 @@ function start() {
         const changedFields = getChangedObjectField(event);
         changedFields.forEach((field) => {
           if (Object.keys(field)[0] === 'name') {
-            console.log('Group has changed name. Sending name changed event ..');
             const room = getRoomName(tableId);
             tableIo.to(room).emit('table-name-change', { id: event.newValue.id, name: event.newValue.name });
           }

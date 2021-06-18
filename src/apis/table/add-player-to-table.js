@@ -22,7 +22,6 @@ function register(app) {
 
     const playerName = (body.name && body.name != '') ? body.name : `Player ${(table.players.length + 1)}`;
     const newPlayer = await createPlayer(table.id, playerName);
-    console.log(JSON.stringify(newPlayer, null, 2));
     table.players.push({ ...newPlayer, isMe: true });
   
     const authToken = createAuthToken(newPlayer.id, table.id);

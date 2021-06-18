@@ -27,15 +27,12 @@ function start() {
 }
 
 function handleDelete(event) {
-  console.log('GOT EVENT DELETED!', JSON.stringify(event, null, 2));
   const tableId = event.doc.tableId;
   const room = getRoomName(tableId);
   tableIo.to(room).emit('player-removed', event.doc.id);
 }
 
 function handleCreate(event) {
-  console.log('GOT EVENT CREATED!', JSON.stringify(event, null, 2));
-
   // Event docs does not have joined docs ... therefor add avatar:
   avatarService.getAvatar(event.doc.avatarId).then((avatar) => {
     const tableId = event.doc.tableId;
@@ -52,7 +49,6 @@ function handleUpdate(event) {
   const changedFields = getChangedObjectField(event);
   changedFields.forEach((field) => {
     if (Object.keys(field)[0] === 'name') {
-      console.log('Player has changed name. Sending name changed event ..');
       const room = getRoomName(tableId);
       tableIo.to(room).emit('player-name-change', { id: event.newValue.id, name: event.newValue.name });
     }

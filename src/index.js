@@ -42,7 +42,16 @@ app.use(cors({
   }
 }));
 
-//avatarService.setupAvatarsDebug();
+async function setupAvatarsDebugAsync() {
+  if (isPrEnvironment() || assumeLocal()) {
+    const randomAvatar = await avatarService.getRandomAvatar();
+    if (!randomAvatar)
+      avatarService.setupAvatarsDebug();
+    else
+      console.log('Avatars is setup (only for debug / test), got', randomAvatar.name);
+  }
+}
+setupAvatarsDebugAsync();
 
 const httpServer = http.createServer(app);
 connectSocket(httpServer, allowedOrigins);

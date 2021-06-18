@@ -2,6 +2,9 @@ import avatarRepository from '../repositories/avatarRepository.js';
 
 async function getRandomAvatar(ignoreIds = []) {
   let allAvatars = await avatarRepository.getAll();
+  if (!allAvatars || allAvatars.length === 0)
+    return;
+
   if (ignoreIds.length > 0)
     allAvatars = allAvatars.filter(avatar => !ignoreIds.includes(avatar.id));
 
