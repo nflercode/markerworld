@@ -2,7 +2,10 @@ import thinky from 'thinky';
 import { v4 as uuidv4 } from 'uuid';
 import dbConfig from '../database/rdbConfig.js';
 import playerRepository from './playerRepository.js';
+import { Subject } from 'rxjs';
+import { handleFeed } from './helpers.js';
 
+const subject = new Subject();
 const t = thinky(dbConfig);
 const r = t.r;
 
@@ -20,7 +23,6 @@ async function addTable(name) {
   const newTable = new Table({
     name,
     invitationToken: uuidv4(),
-    createdAt: new Date().toISOString(),
     updatedAt: null
   });
 
@@ -28,15 +30,17 @@ async function addTable(name) {
 }
 
 async function findTable(tableId) {
-    return await Table.get(tableId).getJoin({ players: { avatar: true } }).run();
+    return Table.get(tableId).getJoin({ players: { avatar: true } }).run();
 }
 
 async function findTableByInvitationToken(invitationToken) {
-  return Table.filter({ invitationToken }).getJoin({ players: true }).run().then(tables => tables[0]);
+  return Table.filter({ invitationToken }).getJoin({ players: { avatar: true} }).run().then(tables => tables[0]);
 }
 
 async function changeTableName(tableId, name) {
   return Table.get(tableId).update({ name }).run();
 }
 
-export default { addTable, findTable, findTableByInvitationToken, changeTableName }
+Table.changes().then(feed => handleFeed(feed, subject));
+
+export default { addTable, findTable, findTableByInvitationToken, changeTableName, subject }

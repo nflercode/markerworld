@@ -1,8 +1,6 @@
 import { getTableByInvitationToken } from '../../services/tableService.js'
 import { createPlayer } from '../../services/playerService.js'
 import { createAuthToken, createRefreshToken } from '../../services/tokenService.js'
-import { io as tableIo } from '../../sockets/tableSocket.js'
-import { getRoomName } from '../../sockets/socketRoomHelpers.js'
 import { createTableWithAuthPayload } from './api-payloads.js'
 import { MAX_PLAYERS_IN_TABLE } from '../../constants.js'
 import { createErrorPayload } from '../common/common-payloads.js'
@@ -22,22 +20,20 @@ function register(app) {
       return res.status(400).send(createErrorPayload('Maximum players in table.'));
     }
 
-    const playerName = (body.name && body.name != '') ? body.name : `Player ${(players.length + 1)}`;
+    const playerName = (body.name && body.name != '') ? body.name : `Player ${(table.players.length + 1)}`;
     const newPlayer = await createPlayer(table.id, playerName);
+    console.log(JSON.stringify(newPlayer, null, 2));
     table.players.push({ ...newPlayer, isMe: true });
   
     const authToken = createAuthToken(newPlayer.id, table.id);
     if (!authToken)
       return res.status(500).send(createErrorPayload('Failed to create auth token'));
 
-    const refreshToken = createRefreshToken(newPlayer.id, table.id);
+    const refreshToken = await createRefreshToken(newPlayer.id, table.id);
     if (!refreshToken)
       return res.status(500).send(createErrorPayload('Failed to create refresh token'));
 
-    res.send(createTableWithAuthPayload(table, players, authToken, refreshToken));
-
-    const room = getRoomName(table.id);
-    tableIo.to(room).emit('player-added', newPlayer);
+    res.send(createTableWithAuthPayload(table, table.players, authToken, refreshToken));
   });
 }
 

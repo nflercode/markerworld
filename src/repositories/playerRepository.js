@@ -1,7 +1,10 @@
 import thinky from 'thinky';
 import dbConfig from '../database/rdbConfig.js';
 import avatarRepository from './avatarRepository.js';
+import { handleFeed } from './helpers.js';
+import { Subject } from 'rxjs';
 
+const subject = new Subject();
 const t = thinky(dbConfig);
 const r = t.r;
 
@@ -21,7 +24,6 @@ async function addPlayer(tableId, name, avatarId) {
         tableId,
         avatarId,
         name,
-        createdAt: t.type.date().default(r.now()),
         updatedAt: null
     });
 
@@ -47,4 +49,6 @@ async function setPlayerName(playerId, name) {
     return Player.get(playerId).update({ name }).run();
 }
 
-export default { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName, Player }
+Player.changes().then(feed => handleFeed(feed, subject));
+
+export default { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName, Player, subject }

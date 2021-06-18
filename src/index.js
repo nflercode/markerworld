@@ -5,6 +5,8 @@ import http from 'http';
 import apiLoader from './apis/api-loader.js';
 import { connect as connectSocket } from './sockets/tableSocket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
+import dbEventHandlerTable from './db-event-handlers/table.js';
+import dbEventHandlerPlayer from './db-event-handlers/player.js';
 
 import avatarService from './services/avatarService.js';
 
@@ -44,6 +46,9 @@ app.use(cors({
 
 const httpServer = http.createServer(app);
 connectSocket(httpServer, allowedOrigins);
+
+dbEventHandlerTable.start();
+dbEventHandlerPlayer.start();
 
 apiLoader.loadApis(app);
 
