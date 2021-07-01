@@ -43,13 +43,12 @@ app.use(cors({
 }));
 
 async function setupAvatarsDebugAsync() {
-  if (isPrEnvironment() || assumeLocal()) {
-    const randomAvatar = await avatarService.getRandomAvatar();
-    if (!randomAvatar)
-      avatarService.setupAvatarsDebug();
-    else
-      console.log('Avatars is setup (only for debug / test), got', randomAvatar.name);
-  }
+ // To be removed, some day.
+  const randomAvatar = await avatarService.getRandomAvatar();
+  if (!randomAvatar)
+    avatarService.setupAvatarsDebug();
+  else
+    console.log('Avatars is setup. Temp, kinda..', randomAvatar.name);
 }
 setupAvatarsDebugAsync();
 
