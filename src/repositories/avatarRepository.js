@@ -6,7 +6,9 @@ const t = thinky(dbConfig);
 const Avatar = t.createModel('Avatar', {
   id: t.type.string(),
   name: t.type.string(),
-  imageName: t.type.string()
+  imageName: t.type.string(),
+  createdAt: t.type.date().default(r.now()),
+  updatedAt: t.type.date(),
 });
 
 const avatars = [

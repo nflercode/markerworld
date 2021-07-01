@@ -14,7 +14,7 @@ const Player = t.createModel('Player', {
   avatarId: t.type.string(),
   name: t.type.string().min(1),
   createdAt: t.type.date().default(r.now()),
-  createdAt: t.type.date()
+  updatedAt: t.type.date()
 });
 
 Player.hasOne(avatarRepository.Avatar, 'avatar', 'avatarId', 'id');

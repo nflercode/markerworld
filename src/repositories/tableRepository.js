@@ -14,7 +14,7 @@ const Table = t.createModel('Table', {
   name: t.type.string().min(1),
   invitationToken: t.type.string(),
   createdAt: t.type.date().default(r.now()),
-  createdAt: t.type.date()
+  updatedAt: t.type.date()
 });
 
 Table.hasMany(playerRepository.Player, 'players', 'id', 'tableId');
