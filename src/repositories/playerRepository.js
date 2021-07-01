@@ -1,50 +1,54 @@
-const players = [];
-let id = 1;
+import thinky from 'thinky';
+import dbConfig from '../database/rdbConfig.js';
+import avatarRepository from './avatarRepository.js';
+import { handleFeed } from './helpers.js';
+import { Subject } from 'rxjs';
 
-function addPlayer(tableId, name, avatarId) {
-    const newPlayer = {
-        id: id ++,
+const subject = new Subject();
+const t = thinky(dbConfig);
+const r = t.r;
+
+const Player = t.createModel('Player', {
+  id: t.type.string(),
+  tableId: t.type.string(),
+  avatarId: t.type.string(),
+  name: t.type.string().min(1),
+  createdAt: t.type.date().default(r.now()),
+  updatedAt: t.type.date()
+});
+
+Player.hasOne(avatarRepository.Avatar, 'avatar', 'avatarId', 'id');
+
+async function addPlayer(tableId, name, avatarId) {
+    const newPlayer = new Player({
         tableId,
         avatarId,
         name,
-        createdAt: new Date().toISOString(),
         updatedAt: null
-    };
+    });
 
-    players.push(newPlayer);
+    const savedPlayer = await Player.save(newPlayer);
 
-    return newPlayer;
+    return Player.get(savedPlayer.id).getJoin({ avatar: true }).run();
 }
 
-function deletePlayer(playerId) {
-    const indexToRemove = players.findIndex(p => p.id === playerId);
-    if (indexToRemove === -1)
-        return false;
-
-    players.splice(indexToRemove, 1);
+async function deletePlayer(playerId) {
+    await Player.get(playerId).delete().run();
     return true;
 }
 
-function findPlayers(tableId) {
-    return players.filter(p => p.tableId === tableId);
+async function findPlayers(tableId) {
+    return Player.filter({ tableId }).getJoin({ avatar: true }).run();
 }
 
-function findPlayer(playerId) {
-    return players.find(p => p.id === playerId);
+async function findPlayer(playerId) {
+    return Player.get(playerId).getJoin({ avatar: true }).run();
 }
 
-function setPlayerName(playerId, name) {
-    const index = players.findIndex((p) => p.id === playerId);
-    if (index < 0)
-        return false;
-
-    players[index] = {
-        ...players[index],
-        updatedAt: new Date().toISOString(),
-        name
-    };
-
-    return players[index];
+async function setPlayerName(playerId, name) {
+    return Player.get(playerId).update({ name }).run();
 }
 
-export default { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName }
+Player.changes().then(feed => handleFeed(feed, subject));
+
+export default { addPlayer, deletePlayer, findPlayers, findPlayer, setPlayerName, Player, subject }

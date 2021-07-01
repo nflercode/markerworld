@@ -1,20 +1,18 @@
 import { getTableByInvitationToken } from '../../services/tableService.js'
-import { getPlayers } from '../../services/playerService.js'
-import { createTableWithPlayersPayload } from './api-payloads.js';
+import { createTablePayload } from './api-payloads.js';
+import { createErrorPayload, API_PREFIX } from '../common/common-payloads.js';
 
 function register(app) {
-  app.get('/poker/tables/:invitationToken', (req, res) => {
+  app.get(`/${API_PREFIX}/poker/tables/:invitationToken`, async (req, res) => {
     const { invitationToken } = req.params;
   
-    const table = getTableByInvitationToken(invitationToken);
+    const table = await getTableByInvitationToken(invitationToken);
     if (!table) {
       console.error(`Could not find table for ${invitationToken}`);
       return res.status(404).send(createErrorPayload('Could not find table'));
     }
 
-    const players = getPlayers(table.id);
-
-    res.send(createTableWithPlayersPayload(table, players));
+    res.send(createTablePayload(table));
   });
 }
 

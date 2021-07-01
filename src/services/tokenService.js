@@ -1,54 +1,36 @@
-import refreshTokenRepository from '../repositories/refreshTokenRepository.js'
-import authExpireRepositry from '../repositories/authExpireRepository.js';
+import refreshTokenRepository from '../repositories/refreshTokenRepository.js';
 import { generateAuthToken, generateRefreshToken } from '../jwt/tokenHandler.js'
+import bcrypt from 'bcrypt';
 
 function createAuthToken(playerId, tableId) {
     const authToken = generateAuthToken({ playerId, tableId });
-    const expirationAsISO = authToken.expiresAt.toISOString();
-    
-    const expirationEntiy = authExpireRepositry.getExpiration(playerId);
-    if (expirationEntiy) {
-        console.log('Updating expirationtime for', playerId);
-        authExpireRepositry.updateExpiration(expirationAsISO, playerId);
-    } else { 
-        console.log('Adding expiration time for', playerId);
-        authExpireRepositry.addAuthExpires(expirationAsISO, playerId);
-    }
     return authToken;
 }
 
-function createRefreshToken(playerId, tableId) {
+async function createRefreshToken(playerId, tableId) {
     const refreshToken = generateRefreshToken({ playerId, tableId });
-    refreshTokenRepository.addRefreshToken(refreshToken.token, playerId);
+
+    const hashedRefreshToken = await bcrypt.hash(refreshToken.token, 10);
+    await refreshTokenRepository.addRefreshToken(hashedRefreshToken, playerId);
     return refreshToken;
 }
 
-function getExpirationForAuth(playerId) {
-    return authExpireRepositry.getExpiration(playerId);
+async function compareRefreshToken(playerId, refreshToken) {
+    const storedRefreshToken = await refreshTokenRepository.findRefreshToken(playerId);
+    return await bcrypt.compare(refreshToken, storedRefreshToken.refreshToken);
 }
 
-function getEarliestExpiration() {
-    return authExpireRepositry.getEarliestExpire();
-}
-
-function deleteExpirationForAuth(playerId) {
-    return authExpireRepositry.deleteExpiration(playerId);
-}
-
-function getRefreshToken(playerId) {
-    return refreshTokenRepository.findRefreshToken(playerId);
-}
-
-function removeRefreshToken(playerId) {
-    return refreshTokenRepository.deleteRefreshToken(playerId)
+async function removeRefreshToken(playerId) {
+    try {
+        return await refreshTokenRepository.deleteRefreshToken(playerId);
+    } catch (err) {
+        console.error('FAILED TO DELETE REFRESH TOKEN', playerId, err);
+    }
 }
 
 export {
     createRefreshToken,
-    getRefreshToken,
+    compareRefreshToken,
     removeRefreshToken,
-    createAuthToken,
-    deleteExpirationForAuth,
-    getExpirationForAuth,
-    getEarliestExpiration
+    createAuthToken
 }

@@ -1,13 +1,14 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import cors from 'cors'
-import http from 'http'
-import { register as registerAuthApis } from './apis/auth/index.js'
-import { register as registerPlayerApis } from './apis/player/index.js'
-import { register as registerTableApis } from './apis/table/index.js'
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import http from 'http';
+import apiLoader from './apis/api-loader.js';
 import { connect as connectSocket } from './sockets/tableSocket.js';
 import { isProductionEnvironment, isPrEnvironment, assumeLocal } from './helpers/environmentHelper.js';
-import AuthExpiresMonitor from './services/authExpiresMonitor.js'
+import dbEventHandlerTable from './db-event-handlers/table.js';
+import dbEventHandlerPlayer from './db-event-handlers/player.js';
+
+import avatarService from './services/avatarService.js';
 
 const allowedOrigins = [];
 
@@ -15,7 +16,7 @@ console.log('Env is:', process.env.ENVIRONMENT);
 
 if (assumeLocal()) {
   console.log('starting as local');
-  dotenv.config({path: process.cwd() + '/.env.local'});
+  dotenv.config({ path: process.cwd() + '/.env.local' });
   allowedOrigins.push(/http:\/\/localhost:\d+/);
 }
 
@@ -41,14 +42,24 @@ app.use(cors({
   }
 }));
 
-AuthExpiresMonitor().start();
+async function setupAvatarsDebugAsync() {
+  if (isPrEnvironment() || assumeLocal()) {
+    const randomAvatar = await avatarService.getRandomAvatar();
+    if (!randomAvatar)
+      avatarService.setupAvatarsDebug();
+    else
+      console.log('Avatars is setup (only for debug / test), got', randomAvatar.name);
+  }
+}
+setupAvatarsDebugAsync();
 
 const httpServer = http.createServer(app);
 connectSocket(httpServer, allowedOrigins);
 
-registerAuthApis(app);
-registerPlayerApis(app);
-registerTableApis(app);
+dbEventHandlerTable.start();
+dbEventHandlerPlayer.start();
+
+apiLoader.loadApis(app);
 
 const port = 3000;
 httpServer.listen(port, () => {

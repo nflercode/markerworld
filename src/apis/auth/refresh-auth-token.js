@@ -1,18 +1,18 @@
-import { createAuthToken, getRefreshToken } from '../../services/tokenService.js'
+import { createAuthToken, compareRefreshToken } from '../../services/tokenService.js'
 import { verifyRefreshToken } from '../../jwt/tokenHandler.js'
 import { createAuthTokenPayload } from './api-payloads.js';
-import { createErrorPayload } from '../common/common-payloads.js';
+import { createErrorPayload, API_PREFIX } from '../common/common-payloads.js';
 
 function register(app) {
-  app.post('/auth/refresh-token', (req, res) => {
+  app.post(`/${API_PREFIX}/auth/refresh-token`, async (req, res) => {
     const { body } = req;
 
     const payload = verifyRefreshToken(body.refreshToken);
     if (!payload)
       return res.status(401).send(createErrorPayload('Failed to verify token, token might be expired'));
 
-    const tokenEntity = getRefreshToken(payload.playerId);
-    if (!tokenEntity || tokenEntity.refreshToken !== body.refreshToken)
+    const isOk = await compareRefreshToken(payload.playerId, body.refreshToken);
+    if (!isOk)
       return res.status(401).send(createErrorPayload('Token is not valid, player might have left the table'));
 
     const authToken = createAuthToken(payload.playerId, payload.tableId);
