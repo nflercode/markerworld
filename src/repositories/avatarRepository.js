@@ -2,6 +2,7 @@ import thinky from 'thinky';
 import dbConfig from '../database/rdbConfig.js';
 
 const t = thinky(dbConfig);
+const r = t.r;
 
 const Avatar = t.createModel('Avatar', {
   id: t.type.string(),
