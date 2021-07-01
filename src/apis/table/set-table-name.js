@@ -1,9 +1,10 @@
 import { setTableName } from '../../services/tableService.js';
+import { API_PREFIX, createErrorPayload } from '../common/common-payloads.js';
 import { jwtAuth } from '../middlewares/jwtAuthentication.js';
 import { createTablePayload } from './api-payloads.js';
 
 function register(app) {
-  app.put('/poker/tables', jwtAuth, async (req, res) => {
+  app.put(`/${API_PREFIX}/poker/tables`, jwtAuth, async (req, res) => {
     const { tableId } = req.auth;
     const { body } = req;
 

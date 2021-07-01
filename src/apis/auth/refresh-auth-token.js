@@ -1,10 +1,10 @@
 import { createAuthToken, compareRefreshToken } from '../../services/tokenService.js'
 import { verifyRefreshToken } from '../../jwt/tokenHandler.js'
 import { createAuthTokenPayload } from './api-payloads.js';
-import { createErrorPayload } from '../common/common-payloads.js';
+import { createErrorPayload, API_PREFIX } from '../common/common-payloads.js';
 
 function register(app) {
-  app.post('/auth/refresh-token', async (req, res) => {
+  app.post(`/${API_PREFIX}/auth/refresh-token`, async (req, res) => {
     const { body } = req;
 
     const payload = verifyRefreshToken(body.refreshToken);

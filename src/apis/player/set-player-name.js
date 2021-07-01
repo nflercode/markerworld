@@ -1,10 +1,10 @@
 import { updatePlayerName } from '../../services/playerService.js';
 import { jwtAuth } from '../middlewares/jwtAuthentication.js';
 import { createPlayerPayload } from './api-payloads.js';
-import { createErrorPayload } from '../common/common-payloads.js';
+import { createErrorPayload, API_PREFIX } from '../common/common-payloads.js';
 
 function register(app) {
-  app.put('/poker/players', jwtAuth, async (req, res) => {
+  app.put(`/${API_PREFIX}/poker/players`, jwtAuth, async (req, res) => {
     const { playerId } = req.auth;
     const { body } = req;
 

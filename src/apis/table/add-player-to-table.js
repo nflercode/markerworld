@@ -3,10 +3,10 @@ import { createPlayer } from '../../services/playerService.js'
 import { createAuthToken, createRefreshToken } from '../../services/tokenService.js'
 import { createTableWithAuthPayload } from './api-payloads.js'
 import { MAX_PLAYERS_IN_TABLE } from '../../constants.js'
-import { createErrorPayload } from '../common/common-payloads.js'
+import { createErrorPayload, API_PREFIX } from '../common/common-payloads.js'
 
 function register(app) {
-  app.post('/poker/tables/:invitationToken', async (req, res) => {
+  app.post(`/${API_PREFIX}/poker/tables/:invitationToken`, async (req, res) => {
     const { invitationToken } = req.params;
     const { body } = req;
 

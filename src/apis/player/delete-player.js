@@ -1,11 +1,11 @@
-import { removePlayer } from '../../services/playerService.js'
-import { jwtAuth } from '../middlewares/jwtAuthentication.js'
-import { removeRefreshToken } from '../../services/tokenService.js'
-import { io as tableIo, disconnectSocketForPlayer } from '../../sockets/tableSocket.js';
-import { createErrorPayload } from '../common/common-payloads.js';
+import { removePlayer } from '../../services/playerService.js';
+import { jwtAuth } from '../middlewares/jwtAuthentication.js';
+import { removeRefreshToken } from '../../services/tokenService.js';
+import { createErrorPayload, API_PREFIX } from '../common/common-payloads.js';
+import { disconnectSocketForPlayer } from '../../sockets/tableSocket.js';
 
 function register(app) {
-  app.delete('/poker/players', jwtAuth, async (req, res) => {
+  app.delete(`/${API_PREFIX}/poker/players`, jwtAuth, async (req, res) => {
     const { playerId } = req.auth;
 
     const playerRemoved = await removePlayer(playerId);

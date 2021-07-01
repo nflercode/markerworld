@@ -2,4 +2,6 @@ const createErrorPayload = (msg) => ({
   error: msg
 });
 
-export { createErrorPayload }
+const API_PREFIX = 'markerworld';
+
+export { createErrorPayload, API_PREFIX }

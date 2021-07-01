@@ -1,9 +1,9 @@
 import { getTableByInvitationToken } from '../../services/tableService.js'
 import { createTablePayload } from './api-payloads.js';
-import { createErrorPayload } from '../common/common-payloads.js';
+import { createErrorPayload, API_PREFIX } from '../common/common-payloads.js';
 
 function register(app) {
-  app.get('/poker/tables/:invitationToken', async (req, res) => {
+  app.get(`/${API_PREFIX}/poker/tables/:invitationToken`, async (req, res) => {
     const { invitationToken } = req.params;
   
     const table = await getTableByInvitationToken(invitationToken);

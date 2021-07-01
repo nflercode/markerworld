@@ -16,7 +16,7 @@ function connect(httpServer, allowedOrigins) {
     }
   });
 
-  io = io.of('/table');
+  io = io.of('/markerworld');
   io.use(jwtAuth);
 
   io.on('connection', (socket) => {
