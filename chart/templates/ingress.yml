@@ -14,7 +14,7 @@ spec:
   - host: {{ template "ingress.host" . }}
     http:
       paths:
-      - path: /
+      - path: /markerworld
         pathType: Prefix
         backend:
           service:
