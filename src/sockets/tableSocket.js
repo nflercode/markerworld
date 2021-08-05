@@ -5,12 +5,16 @@ import { jwtAuth } from './middlewares/jwtAuthentication.js';
 const _allSockets = {};
 let io;
 
-function connect(httpServer, corsOptions) {
+function connect(httpServer, allowedOrigins) {
   if (io)
     return io;
 
   io = new SocketIo(httpServer, {
-    cors: corsOptions
+    cors: {
+      origin: allowedOrigins,
+      methods: ["GET"]
+    },
+    path: '/markerworld'
   });
 
   io = io.of('/markerworld');

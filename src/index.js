@@ -33,16 +33,14 @@ if (isPrEnvironment()) {
 
 const app = express();
 app.use(express.json());
-const corsOptions = {
+app.use(cors({
   origin: function(origin, callback) {
     if (allowedOrigins.find((o) => o.test(origin)))
       return callback(null, true);
 
     callback();
   }
-};
-
-app.use(cors(corsOptions));
+}));
 
 async function setupAvatarsDebugAsync() {
  // To be removed, some day.
@@ -56,7 +54,7 @@ async function setupAvatarsDebugAsync() {
 setupAvatarsDebugAsync();
 
 const httpServer = http.createServer(app);
-connectSocket(httpServer, corsOptions);
+connectSocket(httpServer, allowedOrigins);
 
 dbEventHandlerTable.start();
 dbEventHandlerPlayer.start();
