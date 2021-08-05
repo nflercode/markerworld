@@ -14,10 +14,9 @@ function connect(httpServer, allowedOrigins) {
       origin: allowedOrigins,
       methods: ["GET"]
     },
-    path: '/markerworld'
+    path: '/markerworld/socket'
   });
 
-  io = io.of('/markerworld');
   io.use(jwtAuth);
 
   io.on('connection', (socket) => {
