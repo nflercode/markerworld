@@ -50,6 +50,7 @@ async function setupAvatarsDebugAsync() {
   else
     console.log('Avatars is setup. Temp, kinda..', randomAvatar.name);
 }
+
 setupAvatarsDebugAsync();
 
 const httpServer = http.createServer(app);

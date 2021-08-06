@@ -13,10 +13,10 @@ function connect(httpServer, allowedOrigins) {
     cors: {
       origin: allowedOrigins,
       methods: ["GET"]
-    }
+    },
+    path: '/markerworld/socket'
   });
 
-  io = io.of('/markerworld');
   io.use(jwtAuth);
 
   io.on('connection', (socket) => {
