@@ -14,8 +14,16 @@ const Avatar = t.createModel('Avatar', {
 
 const avatars = [
   {
+    name: 'Barbro Bimbo',
+    imageName: 'barbro-bimbo.jpg'
+  },
+  {
     name: 'Egirl Elin',
     imageName: 'egirl-elin.jpg'
+  },
+  {
+    name: 'Enok El-alergiker',
+    imageName: 'enok-elalergiker.jpg'
   },
   {
     name: 'Förmögne Fredrik',
@@ -28,6 +36,10 @@ const avatars = [
   {
     name: 'Hårige Harriette',
     imageName: 'harige-harriette.jpg'
+  },
+  {
+    name: 'Muntra Markus',
+    imageName: 'muntra-markus.jpg'
   },
   {
     name: 'Ostiga Omar',
