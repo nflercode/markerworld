@@ -51,7 +51,7 @@ const avatars = [
   },
   {
     name: 'Sliskige Stefan',
-    imageName: 'sliskiga-stefan.jpg'
+    imageName: 'sliskige-stefan.jpg'
   }
 ];
 
